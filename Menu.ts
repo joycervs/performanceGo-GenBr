@@ -189,61 +189,51 @@ export function main() {
           colors.reset
         );
 
-        id = readlinesync.questionInt("Digite o ID do Produto: ", {
-          limitMessage: "Número inválido!",
-        });
-
-        if (produtos.buscarNoArray(id) === null) {
-          nome = readlinesync.question("Digite o nome do Produto: ");
-          tipo =
-            readlinesync.keyInSelect(
-              tiposProdutos,
-              "Digite o tipo do Produto: ",
-              { cancel: false }
-            ) + 1;
-          preco = readlinesync.questionFloat("Digite o Preço do Produto: ");
-
-          switch (tipo) {
-            case 1:
-              alimentos = readlinesync.question("Digite o Alimento: ");
-              produtos.atualizar(
-                new Alimentos(produtos.gerarId(), nome, tipo, preco, alimentos)
-              );
-
-              break;
-
-            case 2:
-              brinquedos = readlinesync.question("Digite o Brinquedo: ");
-              produtos.atualizar(
-                new Brinquedos(
-                  produtos.gerarId(),
-                  nome,
-                  tipo,
-                  preco,
-                  brinquedos
-                )
-              );
-
-              break;
-
-            case 3:
-              medicamentos = readlinesync.question("Digite o Medicamento: ");
-              produtos.atualizar(
-                new Medicamentos(
-                  produtos.gerarId(),
-                  nome,
-                  tipo,
-                  preco,
-                  medicamentos
-                )
-              );
-
-              break;
+        id = readlinesync.questionInt(
+          "Digite o ID do Produto que Deseja Atualizar: ",
+          {
+            limitMessage: "Número inválido!",
           }
-        } else {
+        );
+
+        let produto = produtos.buscarNoArray(id);
+
+        if (produto === null) {
           console.log(
             `${colors.fg.redstrong}\nO id do produto: ${id} não foi encontrado!${colors.reset}`
           );
+          break;
+        }
+
+        tipo = produto.tipo;
+
+        nome = readlinesync.question("Digite o novo nome do Produto: ");
+        preco = readlinesync.questionFloat("Digite o novo preço do Produto: ");
+
+        switch (tipo) {
+          case 1:
+            alimentos = readlinesync.question("Digite o tipo de Alimento: ");
+            produtos.atualizar(new Alimentos(id, nome, tipo, preco, alimentos));
+
+            break;
+
+          case 2:
+            brinquedos = readlinesync.question("Digite o tipo do Brinquedo: ");
+            produtos.atualizar(
+              new Brinquedos(id, nome, tipo, preco, brinquedos)
+            );
+
+            break;
+
+          case 3:
+            medicamentos = readlinesync.question(
+              "Digite o tipo do Medicamento: "
+            );
+            produtos.atualizar(
+              new Medicamentos(id, nome, tipo, preco, medicamentos)
+            );
+
+            break;
         }
 
         keyPress();
